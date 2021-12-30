@@ -196,7 +196,7 @@ namespace FightingTogetherRelationship
         }
         public String GetMessage(String node, String childNode)
         {
-            LoadLanguageFile(BasePath.Name + "Modules/FightingTogetherRelationship/ModuleData/Language.xml"); 
+            LoadLanguageFile(BasePath.Name + "Modules/FightingTogetherRelationship/ModuleData/Languages/eng_module_strings.xml"); 
             String text;
             try
             {

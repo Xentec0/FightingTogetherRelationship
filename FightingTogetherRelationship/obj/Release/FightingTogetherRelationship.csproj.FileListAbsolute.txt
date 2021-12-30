@@ -1,0 +1,6 @@
+C:\Users\brand\source\repos\Build\Public\Modules\FightingTogetherRelationship\bin\Win64_Shipping_Client\FightingTogetherRelationship.dll
+E:\Program Files (x86)\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules\FightingTogetherRelationship\bin\Win64_Shipping_Client\FightingTogetherRelationship.dll
+C:\Users\brand\source\repos\FightingTogetherRelationship\FightingTogetherRelationship\obj\Release\FightingTogetherRelationship.csproj.CoreCompileInputs.cache
+C:\Users\brand\source\repos\FightingTogetherRelationship\FightingTogetherRelationship\obj\Release\FightingTogetherRelationship.csproj.CopyComplete
+C:\Users\brand\source\repos\FightingTogetherRelationship\FightingTogetherRelationship\obj\Release\FightingTogetherRelationship.dll
+C:\Users\brand\source\repos\FightingTogetherRelationship\FightingTogetherRelationship\obj\Release\FightingTogetherRelationship.csproj.AssemblyReference.cache

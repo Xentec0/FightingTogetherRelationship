@@ -17,7 +17,7 @@ namespace FightingTogetherRelationship {
         {
             base.OnSubModuleLoad();
             String configPath = BasePath.Name + "Modules/FightingTogetherRelationship/ModuleData/FTR_Config.xml";
-            String languagePath = BasePath.Name + "Modules/FightingTogetherRelationship/ModuleData/Language.xml";
+            String languagePath = BasePath.Name + "Modules/FightingTogetherRelationship/ModuleData/Languages/eng_module_strings.xml";
             FTRConfig.newInstance.LoadConfig(configPath);
             FTRConfig.newInstance.LoadLanguageFile(languagePath);
 

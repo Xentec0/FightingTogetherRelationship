@@ -18,7 +18,7 @@ namespace FightingTogetherRelationship
         {
             if(Hero.MainHero != null && Hero.MainHero.IsAlive)
             {
-                if(m.IsFieldBattle || m.IsSiege || m.IsSiegeOutside)
+                if(m.IsFieldBattle || m.IsSiegeAssault || m.IsSiegeOutside)
                 {
                     if(m.PlayerSide.ToString().Equals("Defender") || m.PlayerSide.ToString().Equals("Attacker"))
                     {
@@ -26,8 +26,8 @@ namespace FightingTogetherRelationship
                         MapEventSide sideEnemy = GetEnemyEventSide(m);
                         if(sidePlayer != null && sideEnemy != null)
                         {
-                            List<PartyBase> allyHeroesB = new List<PartyBase>(sidePlayer.PartiesOnThisSide.ToList<PartyBase>());
-                            List<PartyBase> enemyHeroesB = new List<PartyBase>(sideEnemy.PartiesOnThisSide.ToList<PartyBase>());
+                            MBReadOnlyList<MapEventParty> allyHeroesB = sidePlayer.Parties;
+                            MBReadOnlyList<MapEventParty> enemyHeroesB = sideEnemy.Parties;
                             if (allyHeroesB != null && enemyHeroesB != null)
                             {
                                 int totalMenAlly = sidePlayer.TroopCount + sidePlayer.Casualties;
@@ -36,10 +36,8 @@ namespace FightingTogetherRelationship
                                 int casualtiesEnemy = sideEnemy.Casualties;
                                 int involvedMen = totalMenAlly + totalMenEnemy;
                                 float playerContributionRate = sidePlayer.GetPlayerPartyContributionRate();
-                                List <PartyBase> allyHeroes = new List<PartyBase>(ConfigureParties(allyHeroesB));
-                                List <PartyBase> enemyHeroes = new List<PartyBase>(ConfigureParties(enemyHeroesB));
 
-                                if (allyHeroes != null && enemyHeroes != null && allyHeroes.Count > 0 && enemyHeroes.Count > 0)
+                                if (allyHeroesB != null && enemyHeroesB != null && allyHeroesB.Count > 0 && enemyHeroesB.Count > 0)
                                 {
                                     if (totalMenAlly >= FTRConfig.newInstance.FTRInitialize.MinimumAlly && totalMenEnemy >= FTRConfig.newInstance.FTRInitialize.MinimumEnemy)
                                     {
@@ -57,7 +55,7 @@ namespace FightingTogetherRelationship
                                                         int rel = (int)calcrel;
                                                         double relMulti = rel * FTRConfig.newInstance.FTRInitialize.GainMultiplier;
                                                         rel = (int)Math.Round(relMulti, 0, MidpointRounding.AwayFromZero);
-                                                        RelationshipSelector(rel, allyHeroes, enemyHeroes, lostBattle);
+                                                        RelationshipSelector(rel, allyHeroesB, enemyHeroesB, lostBattle);
                                                     }
                                                     else
                                                     {
@@ -66,7 +64,7 @@ namespace FightingTogetherRelationship
                                                         int rel = (int)calcrel;
                                                         double relMulti = rel * FTRConfig.newInstance.FTRInitialize.GainMultiplier;
                                                         rel = (int)Math.Round(relMulti, 0, MidpointRounding.AwayFromZero);
-                                                        RelationshipSelector(rel, allyHeroes, enemyHeroes, lostBattle);
+                                                        RelationshipSelector(rel, allyHeroesB, enemyHeroesB, lostBattle);
                                                     }
                                                 }
                                                 else
@@ -78,11 +76,11 @@ namespace FightingTogetherRelationship
                                                         int rel = (int)calcrel;
                                                         double relMulti = rel * FTRConfig.newInstance.FTRInitialize.GainMultiplier;
                                                         rel = (int)Math.Round(relMulti, 0, MidpointRounding.AwayFromZero);
-                                                        RelationshipSelector(rel, allyHeroes, enemyHeroes, lostBattle);
+                                                        RelationshipSelector(rel, allyHeroesB, enemyHeroesB, lostBattle);
                                                     }
                                                     else
                                                     {
-                                                        RelationshipSelector(1, allyHeroes, enemyHeroes, lostBattle);
+                                                        RelationshipSelector(1, allyHeroesB, enemyHeroesB, lostBattle);
                                                     }
                                                 }
                                             }
@@ -96,7 +94,7 @@ namespace FightingTogetherRelationship
                                                     int rel = (int)calcrel;
                                                     double relMulti = rel * FTRConfig.newInstance.FTRInitialize.GainMultiplier;
                                                     rel = (int)Math.Round(relMulti, 0, MidpointRounding.AwayFromZero);
-                                                    RelationshipSelector(rel, allyHeroes, enemyHeroes, lostBattle);
+                                                    RelationshipSelector(rel, allyHeroesB, enemyHeroesB, lostBattle);
                                                 }
                                                 else
                                                 {
@@ -105,7 +103,7 @@ namespace FightingTogetherRelationship
                                                     int rel = (int)calcrel;
                                                     double relMulti = rel * FTRConfig.newInstance.FTRInitialize.GainMultiplier;
                                                     rel = (int)Math.Round(relMulti, 0, MidpointRounding.AwayFromZero);
-                                                    RelationshipSelector(rel, allyHeroes, enemyHeroes, lostBattle);
+                                                    RelationshipSelector(rel, allyHeroesB, enemyHeroesB, lostBattle);
                                                 }
                                             }
                                         }
@@ -121,7 +119,7 @@ namespace FightingTogetherRelationship
                                                     int rel = -2 + (int)c6;
                                                     double relMulti = rel * FTRConfig.newInstance.FTRInitialize.LossMultiplier;
                                                     rel = (int)Math.Ceiling(relMulti);
-                                                    RelationshipSelector(rel, allyHeroes, enemyHeroes, lostBattle);
+                                                    RelationshipSelector(rel, allyHeroesB, enemyHeroesB, lostBattle);
                                                 }
                                                 else
                                                 {
@@ -132,7 +130,7 @@ namespace FightingTogetherRelationship
                                                     int rel = -2 - (int)c7 + (int)calcrel;
                                                     double relMulti = rel * FTRConfig.newInstance.FTRInitialize.LossMultiplier;
                                                     rel = (int)Math.Ceiling(relMulti);
-                                                    RelationshipSelector(rel, allyHeroes, enemyHeroes, lostBattle);
+                                                    RelationshipSelector(rel, allyHeroesB, enemyHeroesB, lostBattle);
                                                 }
                                             }
                                             else
@@ -148,7 +146,7 @@ namespace FightingTogetherRelationship
                                                     int rel = -4 - (int)t1 - (int)c8 + (int)calcrel;
                                                     double relMulti = rel * FTRConfig.newInstance.FTRInitialize.LossMultiplier;
                                                     rel = (int)Math.Ceiling(relMulti);
-                                                    RelationshipSelector(rel, allyHeroes, enemyHeroes, lostBattle);
+                                                    RelationshipSelector(rel, allyHeroesB, enemyHeroesB, lostBattle);
                                                 }
                                                 else
                                                 {
@@ -159,7 +157,7 @@ namespace FightingTogetherRelationship
                                                     int rel = -4 - (int)t2 + (int)calcrel;
                                                     double relMulti = rel * FTRConfig.newInstance.FTRInitialize.LossMultiplier;
                                                     rel = (int)Math.Ceiling(relMulti);
-                                                    RelationshipSelector(rel, allyHeroes, enemyHeroes, lostBattle);
+                                                    RelationshipSelector(rel, allyHeroesB, enemyHeroesB, lostBattle);
 
                                                 }
                                             }
@@ -173,40 +171,40 @@ namespace FightingTogetherRelationship
             }
         }
         //Determains if AI parties relationship will be changed
-        private void AddPlayerRelationshipWithLords(int rel, List<PartyBase> allyParties)
+        private void AddPlayerRelationshipWithLords(int rel, MBReadOnlyList<MapEventParty> allyParties)
         {
             bool isLordParty = true;
             List<String> clans = new List<String>();
             for(int i = 0; i <= allyParties.Count-1; i++)
             {
-                if (!clans.Contains(allyParties[i].Owner.Clan.ToString()))
+                if (!clans.Contains(allyParties[i].Party.Owner.Clan.ToString()))
                 {
-                    clans.Add(allyParties[i].Owner.Clan.ToString());
+                    clans.Add(allyParties[i].Party.Owner.Clan.ToString());
                 }
             }
             //Setting the relation with allied partys leaders in battle
             for(int i = 0; i <= allyParties.Count-1; i++)
             { 
-                if (clans != null && !allyParties[i].Owner.Equals(Hero.MainHero))
+                if (clans != null && !allyParties[i].Party.Owner.Equals(Hero.MainHero))
                 {
-                    if (clans.Contains(allyParties[i].Owner.Clan.ToString()))
+                    if (clans.Contains(allyParties[i].Party.Owner.Clan.ToString()))
                     {
-                        int currentRelation = CharacterRelationManager.GetHeroRelation(Hero.MainHero, allyParties[i].Owner.Clan.Leader);
+                        int currentRelation = CharacterRelationManager.GetHeroRelation(Hero.MainHero, allyParties[i].Party.Owner.Clan.Leader);
                         int newRelation = currentRelation + rel;
                         for(int k = 0; k <= allyParties.Count-1; k++)
                         {
-                            if (allyParties[i].Owner.Clan.Equals(allyParties[k].Owner.Clan) && !allyParties[k].Owner.Equals(Hero.MainHero))
+                            if (allyParties[i].Party.Owner.Clan.Equals(allyParties[k].Party.Owner.Clan) && !allyParties[k].Party.Owner.Equals(Hero.MainHero))
                             {
-                                SetRelation(allyParties[k].Owner, currentRelation, newRelation, rel, isLordParty);
+                                SetRelation(allyParties[k].Party.Owner, currentRelation, newRelation, rel, isLordParty);
                             }
                         }
-                        clans.Remove(allyParties[i].Owner.Clan.ToString());
+                        clans.Remove(allyParties[i].Party.Owner.Clan.ToString());
                     }
                 }
             }
         }
         //Determains if companions relationship will be changed
-        private void AddPlayerRelationshipWithCompanions(int rel, List<PartyBase> parties, List<PartyBase> enemyParties, bool lostBattle)
+        private void AddPlayerRelationshipWithCompanions(int rel, MBReadOnlyList<MapEventParty> parties, MBReadOnlyList<MapEventParty> enemyParties, bool lostBattle)
         {
             bool isLordParty = false;
             List<Hero> companionsInParty = new List<Hero>(Hero.MainHero.CompanionsInParty.ToList<Hero>());
@@ -248,11 +246,11 @@ namespace FightingTogetherRelationship
                 {
                     if (!enemyParties[i].Equals(PartyBase.MainParty))
                     {
-                        enemyParties[i].Owner.SyncLastSeenInformation();
+                        enemyParties[i].Party.Owner.SyncLastSeenInformation();
                         for (int j = 0; j <= clanCompanionsRemaining.Count - 1; j++)
                         {
                             clanCompanionsRemaining[j].SyncLastSeenInformation();
-                            if (enemyParties[i].Owner.GetMapPoint().Equals(clanCompanionsRemaining[j].GetMapPoint()))
+                            if (enemyParties[i].Party.Owner.GetMapPoint().Equals(clanCompanionsRemaining[j].GetMapPoint()))
                             {
                                 int currentRelation = CharacterRelationManager.GetHeroRelation(Hero.MainHero, clanCompanionsRemaining[j]);
                                 int newRelation = currentRelation + rel;
@@ -264,7 +262,7 @@ namespace FightingTogetherRelationship
             }
         }
         //Determains if spouse relationship will be changed
-        private void AddPlayerRelationshipWithSpouse(int rel, List<PartyBase> parties, List<PartyBase> enemyParties, bool lostBattle)
+        private void AddPlayerRelationshipWithSpouse(int rel, MBReadOnlyList<MapEventParty> parties, MBReadOnlyList<MapEventParty> enemyParties, bool lostBattle)
         {
             bool setSpouse = false;
             bool isLordParty = false;
@@ -298,8 +296,8 @@ namespace FightingTogetherRelationship
                 {
                     if (!enemyParties[i].Equals(PartyBase.MainParty))
                     {
-                        enemyParties[i].LeaderHero.SyncLastSeenInformation();
-                        if (Hero.MainHero.Spouse.GetMapPoint().Equals(enemyParties[i].LeaderHero.GetMapPoint()))
+                        enemyParties[i].Party.LeaderHero.SyncLastSeenInformation();
+                        if (Hero.MainHero.Spouse.GetMapPoint().Equals(enemyParties[i].Party.LeaderHero.GetMapPoint()))
                         {
                             int currentRelation = CharacterRelationManager.GetHeroRelation(Hero.MainHero, Hero.MainHero.Spouse);
                             int newRelation = currentRelation + rel;
@@ -311,7 +309,7 @@ namespace FightingTogetherRelationship
             }
         }
         //Determains if childrens relationship will be changed
-        private void AddPlayerRelationshipWithChildren(int rel, List<PartyBase> parties, List<PartyBase> enemyParties, bool lostBattle)
+        private void AddPlayerRelationshipWithChildren(int rel, MBReadOnlyList<MapEventParty> parties, MBReadOnlyList<MapEventParty> enemyParties, bool lostBattle)
         {
             bool isLordParty = false;
             List<Hero> children = new List<Hero>(Hero.MainHero.Children);
@@ -352,13 +350,13 @@ namespace FightingTogetherRelationship
                 {
                     if (!enemyParties[i].Equals(PartyBase.MainParty))
                     {
-                        enemyParties[i].LeaderHero.SyncLastSeenInformation();
+                        enemyParties[i].Party.LeaderHero.SyncLastSeenInformation();
                         for (int j = 0; j <= childrenRemaining.Count - 1; j++)
                         {
                             if (!childrenRemaining[j].IsChild)
                             {
                                 childrenRemaining[j].SyncLastSeenInformation();
-                                if (enemyParties[i].LeaderHero.GetMapPoint().Equals(childrenRemaining[j].GetMapPoint()))
+                                if (enemyParties[i].Party.LeaderHero.GetMapPoint().Equals(childrenRemaining[j].GetMapPoint()))
                                 {
                                     int currentRelation = CharacterRelationManager.GetHeroRelation(Hero.MainHero, childrenRemaining[j]);
                                     int newRelation = currentRelation + rel;
@@ -371,7 +369,7 @@ namespace FightingTogetherRelationship
             }
         }
         //Selects added relationship based on config
-        private void RelationshipSelector(int rel, List<PartyBase> allyParties, List<PartyBase> enemyParties, bool lostBattle)
+        private void RelationshipSelector(int rel, MBReadOnlyList<MapEventParty> allyParties, MBReadOnlyList<MapEventParty> enemyParties, bool lostBattle)
         {
             AddPlayerRelationshipWithLords(rel, allyParties);
             if(FTRConfig.newInstance.FTRInitialize.EnableCompanions == true)
@@ -499,7 +497,7 @@ namespace FightingTogetherRelationship
                 {
                     if(party[i].MobileParty != null)
                     {
-                        if(!(party[i].MobileParty.IsBandit || party[i].MobileParty.IsBanditBossParty || party[i].MobileParty.IsCaravan || party[i].MobileParty.IsDeserterParty || party[i].MobileParty.IsGarrison || party[i].MobileParty.IsLeaderless || !party[i].MobileParty.IsLordParty))
+                        if(!(party[i].MobileParty.IsBandit || party[i].MobileParty.IsBanditBossParty || party[i].MobileParty.IsCaravan || party[i].MobileParty.IsGarrison || !party[i].MobileParty.IsLordParty))
                         {
                             fixedParty.Add(party[i]);
                         }
